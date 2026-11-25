@@ -3114,15 +3114,24 @@
       });
     }
 
+    var deletedKeys = [];
+    try { deletedKeys = JSON.parse(localStorage.getItem("fcn_deleted") || "[]"); } catch (e) {}
+    function markDeleted(key) {
+      if (deletedKeys.indexOf(key) < 0) deletedKeys.push(key);
+      try { localStorage.setItem("fcn_deleted", JSON.stringify(deletedKeys)); } catch (e) {}
+    }
     function ensureSeedRecords() {
       normalizeStoredStocks();
       SEED_SUMMARY.forEach(function(seed) {
+        var key = seed.contractNo + "|" + seed.personalRef;
+        if (deletedKeys.indexOf(key) >= 0) return;
         var found = summaryList.some(function(x) {
           return x.personalRef === seed.personalRef && x.contractNo === seed.contractNo;
         });
         if (!found) summaryList.push(JSON.parse(JSON.stringify(seed)));
       });
       SEED_DETAIL.forEach(function(seed) {
+        if (deletedKeys.indexOf(seed.key) >= 0) return;
         var found = detailList.find(function(x) { return x.key === seed.key; });
         if (!found) {
           found = JSON.parse(JSON.stringify(seed));
@@ -3283,6 +3292,8 @@
         mask.classList.remove("open");
         summaryList.splice(i, 1);
         detailList = detailList.filter(function(d) { return d.key !== item.key; });
+        if (item.key) markDeleted(item.key);
+        if (item.contractNo && item.personalRef) markDeleted(item.contractNo + "|" + item.personalRef);
         if (detailIndex >= detailList.length) detailIndex = 0;
         persistSummary();
         persistDetail();
