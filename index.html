@@ -3147,7 +3147,7 @@
         if (!found) summaryList.push(JSON.parse(JSON.stringify(seed)));
       });
       SEED_DETAIL.forEach(function(seed) {
-        if (deletedKeys.indexOf(seed.key) >= 0) return;
+        if (deletedKeys.indexOf(seed.key) >= 0 || deletedKeys.indexOf(seed.personalRef) >= 0) return;
         var found = detailList.find(function(x) { return x.key === seed.key; });
         if (!found) {
           found = JSON.parse(JSON.stringify(seed));
@@ -3307,8 +3307,11 @@
       document.getElementById("confirm-yes").onclick = function() {
         mask.classList.remove("open");
         summaryList.splice(i, 1);
-        detailList = detailList.filter(function(d) { return d.key !== item.key; });
+        detailList = detailList.filter(function(d) { 
+          return d.key !== item.key && d.personalRef !== item.personalRef; 
+        });
         if (item.key) markDeleted(item.key);
+        if (item.personalRef) markDeleted(item.personalRef);
         if (item.contractNo && item.personalRef) markDeleted(item.contractNo + "|" + item.personalRef);
         if (detailIndex >= detailList.length) detailIndex = 0;
         persistSummary();
