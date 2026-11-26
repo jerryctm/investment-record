@@ -2739,11 +2739,16 @@
       var ordered = detailList.map(function(rec, i) { return { rec: rec, i: i }; }).filter(function(x) {
         if (isHidden(x.rec.key)) return false;
         if (currentUser && currentUser.role !== "admin") {
-          var invNames = String(x.rec.state && x.rec.state.investor || x.rec.investor || "").split(/[、,]/).map(function(s) { return s.trim(); });
-          return invNames.indexOf(currentUser.name) >= 0;
+          var invStr = String(x.rec.state && x.rec.state.investor || x.rec.investor || "");
+          var invNames = invStr.split(/[、,，]/).map(function(s) { return s.trim(); });
+          return invNames.some(function(n) { return n === currentUser.name || n.indexOf(currentUser.name) >= 0; });
         }
         return true;
       }).sort(function(a, b) { return compareRef(a.rec.personalRef, b.rec.personalRef); });
+      if (currentUser && currentUser.role !== "admin" && ordered.length) {
+        var validIndex = ordered.some(function(x) { return x.i === detailIndex; });
+        if (!validIndex) detailIndex = ordered[0].i;
+      }
       ordered.forEach(function(x) {
         var rec = x.rec, i = x.i;
         var btn = document.createElement("button");
