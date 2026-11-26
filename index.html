@@ -2719,9 +2719,9 @@
       }
       tabs.innerHTML = "";
       if (actions) {
-        actions.innerHTML = detailEditing
+        actions.innerHTML = (currentUser && currentUser.role !== "admin") ? "" : (detailEditing
           ? '<button type="button" class="btn btn-outline" onclick="cancelDetailEdit()" style="margin-right:8px">取消</button><button type="button" class="btn btn-primary" onclick="commitDetailEdit()">更新</button>'
-          : '<span style="position:relative;display:flex;flex-direction:column;align-items:center;width:140px" class="admin-only"><button type="button" class="btn" onclick="startDetailEdit()" style="background:#8b5e3c;color:#fff;border-color:#8b5e3c;width:100%;padding:10px 0;font-weight:600;text-align:center;display:flex;align-items:center;justify-content:center">修改</button><span style="position:absolute;top:100%;margin-top:4px;font-size:0.75rem;color:#8a7e72;text-align:center;width:100%;white-space:nowrap">修改此產品資料</span></span>';
+          : '<span style="position:relative;display:flex;flex-direction:column;align-items:center;width:140px" class="admin-only"><button type="button" class="btn" onclick="startDetailEdit()" style="background:#8b5e3c;color:#fff;border-color:#8b5e3c;width:100%;padding:10px 0;font-weight:600;text-align:center;display:flex;align-items:center;justify-content:center">修改</button><span style="position:absolute;top:100%;margin-top:4px;font-size:0.75rem;color:#8a7e72;text-align:center;width:100%;white-space:nowrap">修改此產品資料</span></span>');
       }
       if (desc) {
         desc.textContent = detailEditing
