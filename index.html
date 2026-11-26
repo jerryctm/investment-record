@@ -35,13 +35,18 @@
     .app-header {
       background: var(--card);
       border-bottom: 1px solid var(--card-border);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 14px 0;
       position: sticky;
       top: 0;
       z-index: 100;
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     .header-left { display: flex; align-items: center; gap: 12px; }
     .header-icon {
@@ -542,6 +547,7 @@
     </div>
   </div>
   <header class="app-header">
+    <div class="header-inner">
     <div class="header-left">
       <div class="header-icon">📈</div>
       <div class="header-title">
@@ -555,6 +561,7 @@
       <button class="btn btn-outline admin-only" onclick="resetDefaults()">清空</button>
       <button class="btn btn-outline admin-only" onclick="addToSummary()">加入投資總覽表</button>
       <button class="btn btn-primary admin-only" onclick="updateDisplay()">儲存並更新顯示</button>
+    </div>
     </div>
   </header>
 
