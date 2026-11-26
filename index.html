@@ -3539,9 +3539,11 @@
       return d.rows.reduce(function(s, row) { return s + deliveryProfit(row); }, 0);
     }
     function investorInterest(item, invName) {
-      var rec = detailList.filter(function(d) { return d.key === item.key; })[0];
+      var rec = detailList.filter(function(d) { return d.key === item.key || d.personalRef === item.personalRef; })[0];
+      console.log("investorInterest:", item.personalRef, invName, "rec:", rec ? "found" : "not found");
       if (!rec || !rec.state) return 0;
       var shares = rec.state.investorShares && rec.state.investorShares[invName];
+      console.log("  shares:", shares);
       if (!shares) return 0;
       return shares.reduce(function(s, v) { return s + (Number(String(v).replace(/,/g, "")) || 0); }, 0);
     }
