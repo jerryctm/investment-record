@@ -3137,43 +3137,7 @@
       try { localStorage.setItem("fcn_deleted", JSON.stringify(deletedKeys)); } catch (e) {}
     }
     function ensureSeedRecords() {
-      normalizeStoredStocks();
-      SEED_SUMMARY.forEach(function(seed) {
-        var key = seed.contractNo + "|" + seed.personalRef;
-        if (deletedKeys.indexOf(key) >= 0) return;
-        var found = summaryList.some(function(x) {
-          return x.personalRef === seed.personalRef && x.contractNo === seed.contractNo;
-        });
-        if (!found) summaryList.push(JSON.parse(JSON.stringify(seed)));
-      });
-      SEED_DETAIL.forEach(function(seed) {
-        if (deletedKeys.indexOf(seed.key) >= 0 || deletedKeys.indexOf(seed.personalRef) >= 0) return;
-        var found = detailList.find(function(x) { return x.key === seed.key; });
-        if (!found) {
-          found = JSON.parse(JSON.stringify(seed));
-          detailList.push(found);
-        }
-        if (seed.state && seed.state.periods && found.state) {
-          found.state.investorInterests = found.state.investorInterests || {};
-          found.state.investorShares = found.state.investorShares || {};
-          seed.state.periods.forEach(function(sp, i) {
-            if (sp.interests) {
-              Object.keys(sp.interests).forEach(function(inv) {
-                found.state.investorInterests[inv] = found.state.investorInterests[inv] || [];
-                if (!found.state.investorInterests[inv][i]) found.state.investorInterests[inv][i] = sp.interests[inv];
-              });
-            }
-            if (sp.shares) {
-              Object.keys(sp.shares).forEach(function(inv) {
-                found.state.investorShares[inv] = found.state.investorShares[inv] || [];
-                if (!found.state.investorShares[inv][i]) found.state.investorShares[inv][i] = sp.shares[inv];
-              });
-            }
-          });
-        }
-      });
-      persistSummary();
-      persistDetail();
+      return;
     }
     function esc(v) {
       return String(v == null ? "" : v)
