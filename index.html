@@ -2299,7 +2299,11 @@
       }
       if (investors.length >= 1) {
         investors.forEach(function(inv, idx) {
-          html += '<tr class="inv-section" data-inv-idx="' + idx + '" style="' + (idx === 0 ? '' : 'display:none') + '"><th colspan="7" style="text-align:left;background:#f3eee6">' + esc(inv) + '</th></tr>';
+          html += '<tr class="inv-section" data-inv-idx="' + idx + '" style="' + (idx === 0 ? '' : 'display:none') + '"><th colspan="6" style="text-align:left;background:#f3eee6">' + esc(inv) + '</th><th style="text-align:right;background:#f3eee6;padding:6px 10px">';
+          if (editing) {
+            html += '<button type="button" class="btn btn-outline" onclick="cancelDetailEdit()" style="margin-right:6px;padding:4px 10px;font-size:0.8rem">取消</button><button type="button" class="btn btn-primary" onclick="commitDetailEdit()" style="padding:4px 10px;font-size:0.8rem">更新</button>';
+          }
+          html += '</th></tr>';
           html += '<tr data-inv-idx="' + idx + '" style="' + (idx === 0 ? '' : 'display:none') + '"><th>' + periodLabel + '</th><th>觀察期開始日</th><th>觀察期結束日</th><th>預定派息日</th><th>每月利息 (HKD)</th><th>過賬日期</th><th>實收利息 (HKD)</th></tr>';
           var sumI = 0, sumR = 0;
           periods.forEach(function(p, pi) {
