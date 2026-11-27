@@ -4104,9 +4104,7 @@
     try {
       var savedSettings = JSON.parse(localStorage.getItem("fcn_settings") || "null");
       if (savedSettings && savedSettings.investors) {
-        var defaults = ["Eric", "Gary Leung", "Jerry Cheung", "Terry Cheung"];
-        defaults.forEach(function(n) { if (savedSettings.investors.indexOf(n) < 0) savedSettings.investors.push(n); });
-        SETTINGS.investors = Array.from(new Set(savedSettings.investors));
+        SETTINGS.investors = savedSettings.investors;
       }
       if (savedSettings && savedSettings.currencies) SETTINGS.currencies = savedSettings.currencies;
     } catch (e) {}
