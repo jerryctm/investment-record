@@ -564,8 +564,8 @@
       <button class="btn btn-outline logout-btn" onclick="doRefresh()">刷新</button>
       <button class="btn btn-outline logout-btn viewer-only" onclick="openChangePw()">更改登入密碼</button>
       <button class="btn btn-outline admin-only" onclick="resetDefaults()">清空</button>
-      <button class="btn btn-outline admin-only" onclick="addToSummary()">加入投資總覽表</button>
       <button class="btn btn-primary admin-only" onclick="updateDisplay()">儲存並更新顯示</button>
+      <button class="btn btn-outline admin-only" onclick="addToSummary()">加入投資總覽表</button>
     </div>
     </div>
   </header>
@@ -588,10 +588,15 @@
     <div class="card tab-panel active" id="panel-basic">
       <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
         <span>填寫基本資料</span>
-        <span style="position:relative;display:flex;flex-direction:column;align-items:center;width:180px">
-          <button type="button" class="btn" onclick="openSettings()" style="background:#8b5e3c;color:#fff;border-color:#8b5e3c;width:100%;padding:10px 0;font-weight:600;text-align:center;display:flex;align-items:center;justify-content:center">設定</button>
-          <span style="position:absolute;top:100%;margin-top:4px;font-size:0.75rem;color:#8a7e72;text-align:center;width:100%;white-space:nowrap">投資者及貨幣的設定</span>
-        </span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-primary" onclick="updateDisplay()" style="padding:8px 12px">儲存並更新顯示</button>
+          <button class="btn btn-outline" onclick="addToSummary()" style="padding:8px 12px">加入投資總覽表</button>
+          <button class="btn btn-outline" onclick="switchTab('stocks')" style="padding:8px 12px">下一步：相關股票 →</button>
+          <span style="position:relative;display:flex;flex-direction:column;align-items:center;width:140px">
+            <button type="button" class="btn" onclick="openSettings()" style="background:#8b5e3c;color:#fff;border-color:#8b5e3c;width:100%;padding:10px 0;font-weight:600;text-align:center;display:flex;align-items:center;justify-content:center">設定</button>
+            <span style="position:absolute;top:100%;margin-top:4px;font-size:0.75rem;color:#8a7e72;text-align:center;width:100%;white-space:nowrap">投資者及貨幣的設定</span>
+          </span>
+        </div>
       </div>
       <p class="card-desc">輸入投資者、金額及產品編號。</p>
       <div class="form-row three">
@@ -636,16 +641,18 @@
           </div>
         </div>
       </div>
-      <div class="action-bar">
-        <button class="btn btn-primary" onclick="updateDisplay()">儲存並更新顯示</button>
-        <button class="btn btn-outline" onclick="addToSummary()">加入投資總覽表</button>
-        <button class="btn btn-outline" onclick="switchTab('stocks')">下一步：相關股票 →</button>
-      </div>
     </div>
 
     <!-- Panel 2: 相關股票 -->
     <div class="card tab-panel" id="panel-stocks">
-      <div class="card-title">填寫相關股票</div>
+      <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>填寫相關股票</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-primary" onclick="updateDisplay()" style="padding:8px 12px">儲存並更新顯示</button>
+          <button class="btn btn-outline" onclick="switchTab('basic')" style="padding:8px 12px">← 基本資料</button>
+          <button class="btn btn-outline" onclick="switchTab('dates')" style="padding:8px 12px">下一步：日期 & 派息 →</button>
+        </div>
+      </div>
       <p class="card-desc" id="stocks-desc">填好代號、名稱、現貨價後撳「新增 (+)」，每隻股票會加在下面。</p>
 
       <div class="section-label" id="strike-section-label">Knock Out [KO] (%) / Strike (%)</div>
@@ -713,7 +720,13 @@
 
     <!-- Panel 3: 日期 & 派息 -->
     <div class="card tab-panel" id="panel-dates">
-      <div class="card-title">日期 &amp; 利率 ／ 各期觀察與派息</div>
+      <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>日期 & 利率 ／ 各期觀察與派息</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-primary" onclick="updateDisplay()" style="padding:8px 12px">儲存並更新顯示</button>
+          <button class="btn btn-outline" onclick="switchTab('stocks')" style="padding:8px 12px">← 相關股票</button>
+        </div>
+      </div>
       <p class="card-desc">填寫交易相關日期、派息利率，以及每期觀察期與利息資料。</p>
       <div class="section-label">日期 &amp; 利率</div>
       <div class="form-row three">
@@ -787,10 +800,7 @@
           <tbody id="periods-body"></tbody>
         </table>
       </div>
-      <div class="action-bar">
-        <button class="btn btn-primary" onclick="updateDisplay()">儲存並更新顯示</button>
-        <button class="btn btn-outline" onclick="switchTab('stocks')">← 相關股票</button>
-      </div>
+
     </div>
 
     <!-- 填寫頁內的投資預覽 -->
