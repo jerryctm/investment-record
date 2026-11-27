@@ -69,7 +69,9 @@
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-outline { background: #fff; border-color: var(--input-border); color: var(--text); }
     .btn-outline:hover { background: #f8f4ee; }
-    .viewer-only { }
+    .viewer-only { display: none; }
+    body.admin-mode .viewer-only { display: none !important; }
+    body:not(.admin-mode) .viewer-only { display: inline-flex; }
     .btn-danger {
       background: #fff; border: 1px solid #e57373; color: #c62828;
     }
@@ -920,7 +922,12 @@
       } catch (e) {}
       document.getElementById("login-overlay").style.display = "none";
       switchTab("status");
-      if (user.role !== "admin") applyViewerMode();
+      if (user.role === "admin") {
+        document.body.classList.add("admin-mode");
+      } else {
+        document.body.classList.remove("admin-mode");
+        applyViewerMode();
+      }
       if (typeof renderSummary === "function") renderSummary();
       if (typeof renderStatus === "function") renderStatus();
       if (typeof renderDetail === "function") renderDetail();
@@ -1037,9 +1044,11 @@
             document.getElementById("login-overlay").style.display = "none";
             switchTab("status");
             if (currentUser.role === "admin") {
-              document.querySelectorAll(".viewer-only").forEach(function(el) { el.style.display = "none"; });
+              document.body.classList.add("admin-mode");
+            } else {
+              document.body.classList.remove("admin-mode");
+              applyViewerMode();
             }
-            if (currentUser.role !== "admin") applyViewerMode();
             return;
           }
         }
