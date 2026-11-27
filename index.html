@@ -1149,6 +1149,13 @@
         if (e.target.closest && e.target.closest("input[data-dp-input]")) return;
         closeDp();
       });
+      // Close on Tab or Enter when calendar is open
+      document.addEventListener("keydown", function(e) {
+        if (!popup.classList.contains("open")) return;
+        if (e.key === "Tab" || e.key === "Enter") {
+          closeDp();
+        }
+      });
       return popup;
     }
 
