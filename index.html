@@ -969,11 +969,16 @@
         document.querySelectorAll(".admin-only").forEach(function(el) {
           el.style.display = "none";
         });
-        document.querySelectorAll("#status-view input, #status-view select, #status-view button").forEach(function(el) {
-          if (el.classList.contains("tab") || el.classList.contains("logout-btn")) return;
-          el.disabled = true;
-          el.style.pointerEvents = "none";
-          el.style.opacity = "0.6";
+        document.querySelectorAll("#status-view input, #status-view select").forEach(function(el) {
+          var val = el.tagName === "SELECT" ? (el.options[el.selectedIndex] || {}).text || "" : el.value;
+          var span = document.createElement("span");
+          span.textContent = val || "";
+          span.style.display = "block";
+          span.style.textAlign = "center";
+          el.parentNode.replaceChild(span, el);
+        });
+        document.querySelectorAll("#status-view .detail-cal").forEach(function(el) {
+          el.style.display = "none";
         });
       }
     }
