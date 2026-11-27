@@ -764,6 +764,10 @@
           </div>
           <span class="hint">揀選日期</span>
         </div>
+        <div class="field" id="share-field">
+          <label>股數</label>
+          <input type="text" id="shareCount" value="" placeholder="1,000" inputmode="numeric">
+        </div>
         <div class="field" id="guarantee-field">
           <label>保證期限 Grantee Period</label>
           <input type="text" id="guaranteePeriod" value="" placeholder="例如 3" inputmode="numeric">
@@ -1959,6 +1963,7 @@
         issueDate: getVal("issueDate"),
         finalValDate: getVal("finalValDate"),
         maturityDate: getVal("maturityDate"),
+        shareCount: getVal("shareCount"),
         guaranteePeriod: getVal("guaranteePeriod"),
         couponRate: getVal("couponRate"),
         monthlyInterest: getVal("monthlyInterest"),
@@ -2027,6 +2032,7 @@
       document.getElementById("lbl-issue").textContent = cover ? "收期權金日 Premium Date" : "發行日 Issue Date";
       document.getElementById("lbl-final").textContent = cover ? "定價日 Expiration Date" : "定價日 Final Valuation";
       document.getElementById("guarantee-field").style.display = cover ? "none" : "";
+      document.getElementById("share-field").style.display = cover ? "" : "none";
       document.getElementById("stocks-desc").textContent = "填好代號、名稱、現貨價後撳「新增 (+)」，每隻股票會加在下面。";
       document.getElementById("strike-section-label").textContent = "Knock Out [KO] (%) / Strike (%)";
       document.getElementById("lbl-strike").textContent = "Strike (%)";
@@ -2132,6 +2138,8 @@
       var issueDate = st.issueDate || "";
       var finalValDate = st.finalValDate || "";
       var maturityDate = st.maturityDate || "";
+      var shareCountRaw = String(st.shareCount || "").replace(/,/g, "").trim();
+      var shareCount = shareCountRaw === "" || isNaN(Number(shareCountRaw)) ? "" : Number(shareCountRaw).toLocaleString();
       var guaranteePeriod = st.guaranteePeriod || "";
       var couponRateRaw = String(st.couponRate || "").replace("%", "").trim();
       var couponRate = couponRateRaw === "" || isNaN(Number(couponRateRaw)) ? "" : Number(couponRateRaw).toFixed(2);
@@ -2231,12 +2239,13 @@
 
       html += '<tr class="spacer"><td colspan="7"></td></tr>' +
         (cover
-          ? '<tr><th>交易日<br>Trade Date</th><th>收期權金日<br>Premium Date</th><th>定價日<br>Expiration Date</th><th>結算日<br>Maturity Date</th><th colspan="3">年度票息率<br>Coupon</th></tr>' +
+          ? '<tr><th>交易日<br>Trade Date</th><th>收期權金日<br>Premium Date</th><th>定價日<br>Expiration Date</th><th>結算日<br>Maturity Date</th><th>股數</th><th colspan="2">年度票息率<br>Coupon</th></tr>' +
             '<tr><td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-tradeDate" data-field="tradeDate" value="' + esc(tradeDate) + '"><button type="button" class="detail-cal" data-dp="dp-tradeDate">📅</button>' : tradeDate) + '</td>' +
             '<td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-issueDate" data-field="issueDate" value="' + esc(issueDate) + '" style="min-width:105px"><button type="button" class="detail-cal" data-dp="dp-issueDate">📅</button>' : issueDate) + '</td>' +
             '<td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-finalValDate" data-field="finalValDate" value="' + esc(finalValDate) + '" style="min-width:105px"><button type="button" class="detail-cal" data-dp="dp-finalValDate">📅</button>' : finalValDate) + '</td>' +
             '<td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-maturityDate" data-field="maturityDate" value="' + esc(maturityDate) + '" style="min-width:105px"><button type="button" class="detail-cal" data-dp="dp-maturityDate">📅</button>' : maturityDate) + '</td>' +
-            '<td class="input-cell" colspan="3">' + (editing ? '<input class="detail-edit" data-field="couponRate" value="' + esc(couponRate === "" ? "" : couponRate + "%") + '">' : (couponRate === "" ? "" : couponRate + "%")) + '</td></tr>'
+            '<td class="input-cell">' + (editing ? '<input class="detail-edit" data-field="shareCount" value="' + esc(shareCount) + '">' : shareCount) + '</td>' +
+            '<td class="input-cell" colspan="2">' + (editing ? '<input class="detail-edit" data-field="couponRate" value="' + esc(couponRate === "" ? "" : couponRate + "%") + '">' : (couponRate === "" ? "" : couponRate + "%")) + '</td></tr>'
           : '<tr><th>交易日<br>Trade Date</th><th>發行日<br>Issue Date</th><th>定價日<br>Final Valuation</th><th>結算日<br>Maturity Date</th><th colspan="2">保證期限 / 日期</th><th>年度票息率</th></tr>' +
             '<tr><td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-tradeDate" data-field="tradeDate" value="' + esc(tradeDate) + '"><button type="button" class="detail-cal" data-dp="dp-tradeDate">📅</button>' : tradeDate) + '</td>' +
             '<td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-issueDate" data-field="issueDate" value="' + esc(issueDate) + '" style="min-width:105px"><button type="button" class="detail-cal" data-dp="dp-issueDate">📅</button>' : issueDate) + '</td>' +
