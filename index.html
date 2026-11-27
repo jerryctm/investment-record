@@ -3976,7 +3976,7 @@
           var hasUser = invNames.some(function(n) { return n === currentUser.name || n.indexOf(currentUser.name) >= 0; });
           return hasUser;
         })
-        .sort(function(a, b) { return compareRef(a.item.personalRef, b.item.personalRef); })
+        .sort(function(a, b) { return compareRef(b.item.personalRef, a.item.personalRef); })
         .forEach(function(x) {
         var item = x.item, i = x.i;
         var amt = item.currency ? (item.currency + " ") : "";
