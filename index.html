@@ -88,6 +88,7 @@
     }
     .tab:hover { background: var(--tab-bg); }
     .tab.active { background: var(--tab-active); color: #fff; border-color: var(--tab-active); }
+    .tab.tab-inactive { background: #e8e8e8; }
     .card {
       background: var(--card);
       border: 1px solid var(--card-border);
@@ -2882,7 +2883,10 @@
         var rec = x.rec, i = x.i;
         var btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "tab" + (i === detailIndex ? " active" : "");
+        var isActive = (i === detailIndex);
+        var sumItem = summaryList.find(function(s) { return s.key === rec.key || s.personalRef === rec.personalRef; });
+        var isInactive = sumItem && sumItem.status && sumItem.status !== "收息中";
+        btn.className = "tab" + (isActive ? " active" : "") + (isInactive ? " tab-inactive" : "");
         btn.textContent = rec.personalRef || "未編號";
         btn.onclick = function() {
           if (detailEditing) return;
