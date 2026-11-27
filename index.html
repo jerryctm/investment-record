@@ -894,6 +894,7 @@
       "2100": { name: "Terry Cheung", role: "viewer" },
       "2016": { name: "Gary Leung", role: "viewer" }
     };
+    try { var savedUsers = JSON.parse(localStorage.getItem("fcn_users") || "null"); if (savedUsers) USERS = savedUsers; } catch (e) {}
     var currentUser = window._fcnUser || null;
     try { if (!currentUser) currentUser = JSON.parse(sessionStorage.getItem("fcn_session") || "null"); } catch (e) {}
     function togglePw() {
@@ -4268,15 +4269,34 @@
     }
     function renderSettingsLists() {
       SETTINGS.investors.sort(function(a, b) { return a.toUpperCase() < b.toUpperCase() ? -1 : 1; });
-      ["investors", "currencies"].forEach(function(kind) {
-        var box = document.getElementById("settings-" + kind);
-        if (!box) return;
-        box.innerHTML = SETTINGS[kind].map(function(v, i) {
-          return '<div class="settings-item"><span>' + esc(v) + '</span>' +
-            '<button type="button" class="btn btn-outline" style="padding:4px 10px" onclick="editSetting(\'' + kind + '\',' + i + ')">修改</button>' +
-            '<button type="button" class="btn btn-danger" style="padding:4px 10px" onclick="deleteSetting(\'' + kind + '\',' + i + ')">刪除</button></div>';
+      var invBox = document.getElementById("settings-investors");
+      if (invBox) {
+        invBox.innerHTML = SETTINGS.investors.map(function(v, i) {
+          var pw = getUserPassword(v) || "";
+          return '<div class="settings-item" style="display:flex;align-items:center;gap:8px"><span style="flex:1">' + esc(v) + '</span>' +
+            '<input type="text" placeholder="密碼" value="' + esc(pw) + '" style="width:80px;padding:4px 8px;border:1px solid #ddd;border-radius:4px" onchange="setUserPassword(\'' + esc(v) + '\',this.value)">' +
+            '<button type="button" class="btn btn-outline" style="padding:4px 10px" onclick="editSetting(\'investors\',' + i + ')">修改</button>' +
+            '<button type="button" class="btn btn-danger" style="padding:4px 10px" onclick="deleteSetting(\'investors\',' + i + ')">刪除</button></div>';
         }).join("") || '<div class="summary-empty">未有項目</div>';
-      });
+      }
+      var curBox = document.getElementById("settings-currencies");
+      if (curBox) {
+        curBox.innerHTML = SETTINGS.currencies.map(function(v, i) {
+          return '<div class="settings-item"><span>' + esc(v) + '</span>' +
+            '<button type="button" class="btn btn-outline" style="padding:4px 10px" onclick="editSetting(\'currencies\',' + i + ')">修改</button>' +
+            '<button type="button" class="btn btn-danger" style="padding:4px 10px" onclick="deleteSetting(\'currencies\',' + i + ')">刪除</button></div>';
+        }).join("") || '<div class="summary-empty">未有項目</div>';
+      }
+    }
+    function getUserPassword(name) {
+      for (var pw in USERS) { if (USERS[pw].name === name) return pw; }
+      return "";
+    }
+    function setUserPassword(name, newPw) {
+      if (!newPw) return;
+      for (var pw in USERS) { if (USERS[pw].name === name) { delete USERS[pw]; break; } }
+      USERS[newPw] = { name: name, role: "viewer" };
+      try { localStorage.setItem("fcn_users", JSON.stringify(USERS)); } catch (e) {}
     }
     function addSetting(kind) {
       var input = document.getElementById("settings-" + (kind === "investors" ? "investor" : "currency") + "-new");
