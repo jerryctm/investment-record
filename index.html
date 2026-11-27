@@ -2874,7 +2874,7 @@
           return invNames.some(function(n) { return n === currentUser.name || n.indexOf(currentUser.name) >= 0; });
         }
         return true;
-      }).sort(function(a, b) { return compareRef(a.rec.personalRef, b.rec.personalRef); });
+      }).sort(function(a, b) { return compareRef(b.rec.personalRef, a.rec.personalRef); });
       if (currentUser && currentUser.role !== "admin" && ordered.length) {
         var validIndex = ordered.some(function(x) { return x.i === detailIndex; });
         if (!validIndex) detailIndex = ordered[0].i;
