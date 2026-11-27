@@ -3740,7 +3740,15 @@
       return it.delivery;
     }
     function setDeliveryField(i, field, value) { ensureDelivery(i)[field] = value; persistSummary(); renderStatus(); }
-    function setDeliveryRow(i, ri, field, value) { ensureDelivery(i).rows[ri][field] = value; persistSummary(); renderStatus(); }
+    function setDeliveryRow(i, ri, field, value) {
+      if (field === "shares") {
+        var n = Number(String(value).replace(/,/g, ""));
+        value = isNaN(n) ? value : n.toLocaleString("en-US");
+      }
+      ensureDelivery(i).rows[ri][field] = value;
+      persistSummary();
+      renderStatus();
+    }
     function addDeliveryRow(i) { ensureDelivery(i).rows.push({ date: "", action: "買入", shares: "", price: "", fee: "" }); persistSummary(); renderStatus(); }
     function deleteDeliveryRow(i, ri) { ensureDelivery(i).rows.splice(ri, 1); persistSummary(); renderStatus(); }
     function markSold(i) {
@@ -3868,7 +3876,7 @@
             '<td class="input-cell"><input class="spot-in" id="drow-' + x.i + '-' + ri + '" value="' + esc(row.date || "") + '" placeholder="dd/mm/yyyy" onchange="setDeliveryRow(' + x.i + ',' + ri + ',\'date\',this.value)" style="width:90px"><button type="button" class="detail-cal" data-dp="drow-' + x.i + '-' + ri + '">📅</button><button type="button" class="btn btn-danger admin-only" style="padding:2px 6px;margin-left:4px" onclick="deleteDeliveryRow(' + x.i + ',' + ri + ')">刪除</button></td>' +
             '<td class="input-cell"><select class="spot-in" onchange="setDeliveryRow(' + x.i + ',' + ri + ',\'action\',this.value)">' +
               ["買入","股息","賣出"].map(function(a) { return '<option' + (row.action === a ? " selected" : "") + '>' + a + '</option>'; }).join("") + '</select></td>' +
-            '<td class="input-cell"><input class="spot-in" value="' + esc(row.shares || "") + '" onchange="setDeliveryRow(' + x.i + ',' + ri + ',\'shares\',this.value)"></td>' +
+            '<td class="input-cell"><input class="spot-in" value="' + (row.shares ? Number(String(row.shares).replace(/,/g, "")).toLocaleString("en-US") : "") + '" onchange="setDeliveryRow(' + x.i + ',' + ri + ',\'shares\',this.value)"></td>' +
             '<td class="input-cell"><input class="spot-in" value="' + esc(row.price || "") + '" onchange="setDeliveryRow(' + x.i + ',' + ri + ',\'price\',this.value)"></td>' +
             '<td class="input-cell"><input class="spot-in" value="' + esc(row.fee || "") + '" onchange="setDeliveryRow(' + x.i + ',' + ri + ',\'fee\',this.value)"></td>' +
             '<td' + (profit < 0 ? ' class="pct-red"' : '') + '>' + profit.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td></tr>';
