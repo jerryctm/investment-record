@@ -3876,7 +3876,14 @@
         html += '<tr class="total-row"><td colspan="3" class="right">合計</td><td>' + sumCoupon.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td><td></td><td>' + sumTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td><td colspan="5"></td></tr>';
         html += '</table></div>';
       }
-      var delivered = items.filter(function(x) { return x.item.status === "已接貨"; });
+      var delivered = items.filter(function(x) {
+        if (x.item.status !== "已接貨") return false;
+        if (currentUser && currentUser.role !== "admin") {
+          var invNames = String(x.item.investor || "").split(/[、,]/).map(function(s) { return s.trim(); });
+          return invNames.some(function(n) { return n === currentUser.name; });
+        }
+        return true;
+      });
       if (delivered.length) {
         if (typeof deliveryIndex !== "number" || deliveryIndex >= delivered.length) deliveryIndex = 0;
         html += '<div class="summary-block" style="margin-top:18px"><div class="card-title">股票接貨表</div>';
