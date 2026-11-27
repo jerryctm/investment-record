@@ -2704,6 +2704,15 @@
         if (field === "contractNo") rec.contractNo = value;
         if (field === "productNo") rec.productNo = value;
         if (field === "currency") rec.currency = value;
+        if (field === "koMult" || field === "strikeMult") {
+          var koM = Number(st.koMult) || 0;
+          var stM = Number(st.strikeMult) || 0;
+          (st.stocks || []).forEach(function(s) {
+            var px = Number(s.price) || 0;
+            if (px && koM) s.ko = String(round4(px * koM / 100));
+            if (px && stM) s.strike = String(round4(px * stM / 100));
+          });
+        }
       }
     }
     function saveDetailField(field, value) {
@@ -2734,6 +2743,8 @@
       item.maturityDate = st.maturityDate || item.maturityDate;
       item.tenor = st.tenor || item.tenor;
       item.guarantee = st.guaranteePeriod || item.guarantee;
+      if (st.koMult) item.koPct = Number(st.koMult) || item.koPct;
+      if (st.strikeMult) item.strikePct = Number(st.strikeMult) || item.strikePct;
       if (st.stocks && st.stocks.length) {
         item.stocks = st.stocks.map(function(s, i) {
           var old = (item.stocks || [])[i] || {};
