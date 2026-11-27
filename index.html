@@ -1289,9 +1289,11 @@
           }
         });
         el.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter') {
+          if (e.key === 'Enter' || e.key === 'Tab') {
             e.preventDefault();
             closeDp();
+            var formatted = formatDMY(el.value);
+            if (formatted) el.value = formatted;
             el.blur();
             var fields = ["tradeDate", "issueDate", "finalValDate", "maturityDate", "guaranteePeriod", "couponRate"];
             var idx = fields.indexOf(id);
@@ -1795,6 +1797,12 @@
       if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
       return dt;
     }
+    function formatDMY(v) {
+      if (!v) return "";
+      var m = String(v).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (m) return m[1].padStart(2, "0") + "/" + m[2].padStart(2, "0") + "/" + m[3];
+      return v;
+    }
     function fmtDMY(dt) {
       return String(dt.getDate()).padStart(2, "0") + "/" + String(dt.getMonth() + 1).padStart(2, "0") + "/" + dt.getFullYear();
     }
@@ -2274,10 +2282,12 @@
           periods.forEach(function(p, pi) {
             var invInterests = (st.investorInterests && st.investorInterests[inv]) || [];
             var invShares = (st.investorShares && st.investorShares[inv]) || [];
+            var invPosts = (st.investorPosts && st.investorPosts[inv]) || [];
             var interestVal = invInterests[pi] || p.interest || "";
             var interestNum = Number(interestVal) || 0;
             var share = invShares[pi] || "";
             var shareNum = Number(share) || 0;
+            var postDate = invPosts[pi] || p.postDate || "";
             sumI += interestNum;
             sumR += shareNum;
             html += '<tr data-inv-idx="' + idx + '" style="' + (idx === 0 ? '' : 'display:none') + '"><td>' + p.num + '</td>' +
@@ -2285,7 +2295,7 @@
               '<td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-' + inv.replace(/\s/g,"") + '-' + pi + '-end" data-field="period.' + pi + '.end" value="' + esc(p.end) + '"><button type="button" class="detail-cal" data-dp="dp-' + inv.replace(/\s/g,"") + '-' + pi + '-end">📅</button>' : (p.end || "")) + '</td>' +
               '<td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-' + inv.replace(/\s/g,"") + '-' + pi + '-coupon" data-field="period.' + pi + '.coupon" value="' + esc(p.couponDate) + '"><button type="button" class="detail-cal" data-dp="dp-' + inv.replace(/\s/g,"") + '-' + pi + '-coupon">📅</button>' : (p.couponDate || "")) + '</td>' +
               '<td class="input-cell mid">' + (editing ? '<input class="detail-edit" data-field="period.' + pi + '.interest" data-investor="' + esc(inv) + '" value="' + esc(interestNum || "") + '">' : (interestNum ? interestNum.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "")) + '</td>' +
-              '<td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-' + inv.replace(/\s/g,"") + '-' + pi + '-post" data-field="period.' + pi + '.post" value="' + esc(p.postDate) + '"><button type="button" class="detail-cal" data-dp="dp-' + inv.replace(/\s/g,"") + '-' + pi + '-post">📅</button>' : (p.postDate || "")) + '</td>' +
+              '<td class="input-cell">' + (editing ? '<input class="detail-edit" id="dp-' + inv.replace(/\s/g,"") + '-' + pi + '-post" data-field="period.' + pi + '.post" data-investor="' + esc(inv) + '" value="' + esc(postDate) + '"><button type="button" class="detail-cal" data-dp="dp-' + inv.replace(/\s/g,"") + '-' + pi + '-post">📅</button>' : (postDate || "")) + '</td>' +
               '<td class="input-cell mid">' + (editing ? '<input class="detail-edit" data-field="period.' + pi + '.share" data-investor="' + esc(inv) + '" value="' + esc(share) + '" placeholder="0">' : (shareNum ? shareNum.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "")) + '</td></tr>';
           });
           html += '<tr class="total-row" data-inv-idx="' + idx + '" style="' + (idx === 0 ? '' : 'display:none') + '"><td colspan="4" class="right">合計</td><td class="formula-cell mid">' + (sumI ? sumI.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "") + '</td><td></td><td class="formula-cell mid">' + (sumR ? sumR.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "") + '</td></tr>';
@@ -2931,7 +2941,7 @@
             if (input.checked) investors.push(input.value);
           } else if (input.dataset.field === "investorAmount") {
             investorAmounts[input.dataset.investor] = input.value;
-          } else if (input.dataset.investor && (input.dataset.field.indexOf(".interest") > 0 || input.dataset.field.indexOf(".share") > 0)) {
+          } else if (input.dataset.investor && (input.dataset.field.indexOf(".interest") > 0 || input.dataset.field.indexOf(".share") > 0 || input.dataset.field.indexOf(".post") > 0)) {
             var parts = input.dataset.field.split(".");
             var pi = Number(parts[1]);
             var col = parts[2];
@@ -2946,6 +2956,10 @@
                 rec.state.investorShares = rec.state.investorShares || {};
                 rec.state.investorShares[inv] = rec.state.investorShares[inv] || [];
                 rec.state.investorShares[inv][pi] = input.value;
+              } else if (col === "post") {
+                rec.state.investorPosts = rec.state.investorPosts || {};
+                rec.state.investorPosts[inv] = rec.state.investorPosts[inv] || [];
+                rec.state.investorPosts[inv][pi] = input.value;
               }
             }
           } else {
