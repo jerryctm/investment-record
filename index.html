@@ -2218,7 +2218,7 @@
               cells += names.map(function(n) {
                 var v = Number(String(amounts[n]).replace(/,/g, "")) || 0;
                 return '<td class="input-cell" style="text-align:center;padding:6px 10px">' +
-                '<strong>' + esc(n) + '</strong><br>' + v.toLocaleString("en-US", { maximumFractionDigits: 0 }) +
+                '<strong>' + esc(n) + '</strong><br>HKD ' + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
                 '</td>';
               }).join("");
             } else {
@@ -2241,7 +2241,7 @@
                 : esc(investor)) + '</td>';
             }
             cells += '<td class="label" style="width:' + totalW + '%;white-space:nowrap;padding:6px 4px;text-align:center">總投資額</td>';
-            cells += '<td class="input-cell" style="white-space:nowrap;padding:6px 10px">' + esc(currency) + '　' + amount.toLocaleString("en-US", { maximumFractionDigits: 0 }) + '</td>';
+            cells += '<td class="input-cell" style="white-space:nowrap;padding:6px 10px">' + esc(currency) + '　' + amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td>';
             return '<table class="excel" style="width:100%;table-layout:auto;margin:0"><tr>' + cells + '</tr></table>';
           })() +
         '</td></tr>' +
@@ -2429,7 +2429,7 @@
       var totalCell = box.querySelector("td.input-cell");
       box.querySelectorAll("td").forEach(function(td) {
         if (td.previousElementSibling && td.previousElementSibling.textContent.indexOf("總投資額") >= 0) {
-          td.textContent = "HKD　" + total.toLocaleString("en-US", { maximumFractionDigits: 0 });
+          td.textContent = "HKD　" + total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
       });
     }
