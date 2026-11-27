@@ -3518,8 +3518,7 @@
     function headPct(n, cls) {
       if (n === "" || n == null || isNaN(Number(n)) || Number(n) === 0) return "";
       var v = Number(n);
-      var s = Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : String(v);
-      return '<span class="' + cls + '">' + esc(s) + '%</span>';
+      return '<span class="' + cls + '">' + v.toFixed(2) + '%</span>';
     }
 
     function dmyText(v) {
