@@ -2292,9 +2292,6 @@
           html += '<button type="button" class="tab' + (idx === 0 ? ' active' : '') + '" onclick="showInvestorTab(' + idx + ')">' + esc(inv) + '</button>';
         });
         html += '</div>';
-        if (editing) {
-          html += '<div><button type="button" class="btn btn-outline" onclick="cancelDetailEdit()" style="margin-right:8px">取消</button><button type="button" class="btn btn-primary" onclick="commitDetailEdit()">更新</button></div>';
-        }
         html += '</div></td></tr>';
       }
       if (investors.length >= 1) {
