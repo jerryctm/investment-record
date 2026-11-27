@@ -322,6 +322,8 @@
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
     .summary-block { margin-bottom: 28px; }
+    .summary-block.summary-inactive table.summary td,
+    .summary-block.summary-inactive table.summary th { background: #f0f0f0; }
     .summary-investor { font-weight: 600; margin: 0; }
     .summary-head { display: flex; align-items: center; gap: 12px; margin: 0 0 6px; }
     table.summary {
@@ -3977,7 +3979,8 @@
         amt += Number(item.amount || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         var g = guaranteeText(item);
         var ex = summaryDates(item);
-        html += '<div class="summary-block">';
+        var blockClass = (item.status && item.status !== "收息中") ? " summary-inactive" : "";
+        html += '<div class="summary-block' + blockClass + '">';
         html += '<div class="summary-head"><div class="summary-investor">投資者 : ' + esc(item.investor) + '</div>' +
           '<button type="button" class="btn btn-danger" onclick="removeSummary(' + i + ')">移除此產品</button></div>';
         html += '<table class="summary">';
