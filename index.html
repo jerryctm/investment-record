@@ -69,9 +69,10 @@
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-outline { background: #fff; border-color: var(--input-border); color: var(--text); }
     .btn-outline:hover { background: #f8f4ee; }
-    .viewer-only { display: none; }
+    .admin-only { display: none; }
+    body.admin-mode .admin-only { display: inline-flex; }
+    .viewer-only { display: inline-flex; }
     body.admin-mode .viewer-only { display: none !important; }
-    body:not(.admin-mode) .viewer-only { display: inline-flex; }
     .btn-danger {
       background: #fff; border: 1px solid #e57373; color: #c62828;
     }
@@ -933,8 +934,7 @@
       if (typeof renderDetail === "function") renderDetail();
     }
     function applyViewerMode() {
-      setTimeout(function() {
-        document.querySelectorAll("input, select, textarea").forEach(function(el) {
+      document.querySelectorAll("input, select, textarea").forEach(function(el) {
           if (el.closest("#login-overlay") || el.closest("#change-pw-mask")) return;
           el.disabled = true;
         });
@@ -949,7 +949,6 @@
         var subTabs = document.getElementById("sub-tabs");
         if (subTabs) subTabs.style.display = "none";
         switchTab("status");
-      }, 500);
     }
     function reapplyViewerMode() {
       if (currentUser && currentUser.role !== "admin") {
