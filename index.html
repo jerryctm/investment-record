@@ -335,6 +335,7 @@
       vertical-align: middle;
     }
     table.summary th { background: #f3eee6; font-weight: 600; line-height: 1.25; }
+    table.summary tr.row-inactive td { background: #f0f0f0; }
     table.summary .meta td { background: #faf8f4; font-weight: 600; }
     table.summary .spot-in {
       width: 92px; padding: 4px 6px; text-align: center;
@@ -2303,9 +2304,9 @@
             var invShares = (st.investorShares && st.investorShares[inv]) || [];
             var invPosts = (st.investorPosts && st.investorPosts[inv]) || [];
             var interestVal = invInterests[pi] || p.interest || "";
-            var interestNum = Number(interestVal) || 0;
+            var interestNum = Number(String(interestVal).replace(/,/g, "")) || 0;
             var share = invShares[pi] || "";
-            var shareNum = Number(share) || 0;
+            var shareNum = Number(String(share).replace(/,/g, "")) || 0;
             var postDate = invPosts[pi] || p.postDate || "";
             sumI += interestNum;
             sumR += shareNum;
@@ -2985,11 +2986,11 @@
               if (col === "interest") {
                 rec.state.investorInterests = rec.state.investorInterests || {};
                 rec.state.investorInterests[inv] = rec.state.investorInterests[inv] || [];
-                rec.state.investorInterests[inv][pi] = input.value;
+                rec.state.investorInterests[inv][pi] = String(input.value).replace(/,/g, "");
               } else if (col === "share") {
                 rec.state.investorShares = rec.state.investorShares || {};
                 rec.state.investorShares[inv] = rec.state.investorShares[inv] || [];
-                rec.state.investorShares[inv][pi] = input.value;
+                rec.state.investorShares[inv][pi] = String(input.value).replace(/,/g, "");
               } else if (col === "post") {
                 rec.state.investorPosts = rec.state.investorPosts || {};
                 rec.state.investorPosts[inv] = rec.state.investorPosts[inv] || [];
@@ -3832,7 +3833,8 @@
           var diff = delivTotal ? (delivTotal / invCount) : (Number(String(it.stockDiff || "").replace(/,/g, "")) || 0);
           var total = coupon + diff;
           sumCoupon += coupon; sumTotal += total;
-          html += '<tr><td>' + esc(it.personalRef || "") + '</td><td>' + esc(it.contractNo || "") + '</td><td>' + esc(it.productNo || "") + '</td>' +
+          var rowClass = (it.status && it.status !== "收息中") ? ' class="row-inactive"' : '';
+          html += '<tr' + rowClass + '><td>' + esc(it.personalRef || "") + '</td><td>' + esc(it.contractNo || "") + '</td><td>' + esc(it.productNo || "") + '</td>' +
             '<td' + (coupon < 0 ? ' class="pct-red"' : '') + '>' + coupon.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td>' +
             '<td><input class="spot-in" value="' + diff.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '" placeholder="0.00" onchange="setStatus(' + x.i + ',\'stockDiff\',this.value)"></td>' +
             '<td' + (total < 0 ? ' class="pct-red"' : '') + '>' + total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td>' +
