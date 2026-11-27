@@ -2884,15 +2884,18 @@
       var ordered = detailList.map(function(rec, i) { return { rec: rec, i: i }; }).filter(function(x) {
         if (isHidden(x.rec.key)) return false;
         if (currentUser && currentUser.role !== "admin") {
-          var invStr = String(x.rec.state && x.rec.state.investor || x.rec.investor || "");
-          var invNames = invStr.split(/[、,，]/).map(function(s) { return s.trim(); });
-          return invNames.some(function(n) { return n === currentUser.name || n.indexOf(currentUser.name) >= 0; });
+          var invStr = String((x.rec.state && x.rec.state.investor) || x.rec.investor || "");
+          var invNames = invStr.split(/[、,，\s]+/).map(function(s) { return s.trim(); }).filter(Boolean);
+          return invNames.some(function(n) { return n === currentUser.name; });
         }
         return true;
       }).sort(function(a, b) { return compareRef(b.rec.personalRef, a.rec.personalRef); });
       if (currentUser && currentUser.role !== "admin" && ordered.length) {
         var validIndex = ordered.some(function(x) { return x.i === detailIndex; });
         if (!validIndex) detailIndex = ordered[0].i;
+      } else if (currentUser && currentUser.role !== "admin" && !ordered.length) {
+        view.innerHTML = '<div class="summary-empty">未有產品。</div>';
+        return;
       }
       ordered.forEach(function(x) {
         var rec = x.rec, i = x.i;
