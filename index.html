@@ -2412,12 +2412,19 @@
         input.addEventListener("keydown", function(e) {
           if (e.key === "Enter" || e.key === "Tab") {
             e.preventDefault();
+            e.stopPropagation();
             closeDp();
             if (input.dataset.field && /\.(start|end|coupon|post)$/.test(input.dataset.field) || /Date$/.test(input.dataset.field || "")) {
               var formatted = formatDMY(input.value);
               if (formatted) input.value = formatted;
             }
-            input.blur();
+            var inputs = Array.from(box.querySelectorAll(".detail-edit"));
+            var idx = inputs.indexOf(input);
+            if (idx >= 0 && idx < inputs.length - 1) {
+              inputs[idx + 1].focus();
+            } else {
+              input.blur();
+            }
           }
         });
         if (/\.code$/.test(input.dataset.field || "")) attachDetailSuggest(input);
