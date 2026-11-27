@@ -2275,10 +2275,14 @@
       }
       if (investors.length > 1) {
         html += '<tr class="spacer"><td colspan="8"></td></tr>';
-        html += '<tr><td colspan="8" style="padding:8px 0"><div class="tabs" id="inv-tabs" style="margin:0">';
+        html += '<tr><td colspan="8" style="padding:8px 0"><div style="display:flex;justify-content:space-between;align-items:center"><div class="tabs" id="inv-tabs" style="margin:0">';
         investors.forEach(function(inv, idx) {
           html += '<button type="button" class="tab' + (idx === 0 ? ' active' : '') + '" onclick="showInvestorTab(' + idx + ')">' + esc(inv) + '</button>';
         });
+        html += '</div>';
+        if (editing) {
+          html += '<div><button type="button" class="btn btn-outline" onclick="cancelDetailEdit()" style="margin-right:8px">取消</button><button type="button" class="btn btn-primary" onclick="commitDetailEdit()">更新</button></div>';
+        }
         html += '</div></td></tr>';
       }
       if (investors.length >= 1) {
