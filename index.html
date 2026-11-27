@@ -927,11 +927,11 @@
     function applyViewerMode() {
       setTimeout(function() {
         document.querySelectorAll("input, select, textarea").forEach(function(el) {
-          if (el.closest("#login-overlay")) return;
+          if (el.closest("#login-overlay") || el.closest("#change-pw-mask")) return;
           el.disabled = true;
         });
         document.querySelectorAll("button").forEach(function(el) {
-          if (el.closest("#login-overlay") || el.classList.contains("tab") || el.classList.contains("product-tab") || el.classList.contains("logout-btn")) return;
+          if (el.closest("#login-overlay") || el.closest("#change-pw-mask") || el.classList.contains("tab") || el.classList.contains("product-tab") || el.classList.contains("logout-btn")) return;
           el.disabled = true;
           el.style.opacity = "0.5";
         });
@@ -979,6 +979,9 @@
       document.getElementById("old-pw").value = "";
       document.getElementById("new-pw").value = "";
       document.getElementById("confirm-pw").value = "";
+      document.getElementById("old-pw").disabled = false;
+      document.getElementById("new-pw").disabled = false;
+      document.getElementById("confirm-pw").disabled = false;
       document.getElementById("pw-error").style.display = "none";
       document.getElementById("change-pw-mask").classList.add("open");
     }
