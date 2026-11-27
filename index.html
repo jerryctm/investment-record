@@ -4062,16 +4062,16 @@
               onSummarySpot(job.i, job.j, input.value);
               return;
             }
-            stock.spot = px;
-            if (input) input.value = px;
-            onSummarySpot(job.i, job.j, px);
+            stock.spot = Number(px).toFixed(2);
+            if (input) input.value = Number(px).toFixed(2);
+            onSummarySpot(job.i, job.j, Number(px).toFixed(2));
             detailList.forEach(function(rec, di) {
               if (!rec.state || !rec.state.stocks) return;
               rec.state.stocks.forEach(function(ds, dj) {
                 if (canonCode(ds.code) === canonCode(stock.code)) {
-                  ds.spot = px;
+                  ds.spot = Number(px).toFixed(2);
                   var dtInput = document.getElementById("dt-spot-" + dj);
-                  if (dtInput && di === detailIndex) dtInput.value = px;
+                  if (dtInput && di === detailIndex) dtInput.value = Number(px).toFixed(2);
                 }
               });
             });
