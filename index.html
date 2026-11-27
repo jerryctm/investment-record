@@ -2410,7 +2410,15 @@
       box.querySelectorAll(".detail-edit").forEach(function(input) {
         if (input.tagName === "SELECT") return;
         input.addEventListener("keydown", function(e) {
-          if (e.key === "Enter" && !input.dataset.suggesting) { e.preventDefault(); input.blur(); }
+          if (e.key === "Enter" || e.key === "Tab") {
+            e.preventDefault();
+            closeDp();
+            if (input.dataset.field && /\.(start|end|coupon|post)$/.test(input.dataset.field) || /Date$/.test(input.dataset.field || "")) {
+              var formatted = formatDMY(input.value);
+              if (formatted) input.value = formatted;
+            }
+            input.blur();
+          }
         });
         if (/\.code$/.test(input.dataset.field || "")) attachDetailSuggest(input);
         if (input.dataset.field === "amount") attachDetailAmountSpinner(input);
