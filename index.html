@@ -558,6 +558,7 @@
     <div class="header-actions">
       <button class="btn btn-outline logout-btn" onclick="doLogout()">登出</button>
       <button class="btn btn-outline logout-btn" onclick="doRefresh()">刷新</button>
+      <button class="btn btn-outline logout-btn" onclick="openChangePw()">更改登入密碼</button>
       <button class="btn btn-outline admin-only" onclick="resetDefaults()">清空</button>
       <button class="btn btn-outline admin-only" onclick="addToSummary()">加入投資總覽表</button>
       <button class="btn btn-primary admin-only" onclick="updateDisplay()">儲存並更新顯示</button>
@@ -973,6 +974,47 @@
       if (typeof renderSummary === "function") renderSummary();
       if (typeof renderStatus === "function") renderStatus();
       if (typeof renderDetail === "function") renderDetail();
+    }
+    function openChangePw() {
+      document.getElementById("old-pw").value = "";
+      document.getElementById("new-pw").value = "";
+      document.getElementById("confirm-pw").value = "";
+      document.getElementById("pw-error").style.display = "none";
+      document.getElementById("change-pw-mask").classList.add("open");
+    }
+    function closeChangePw() {
+      document.getElementById("change-pw-mask").classList.remove("open");
+    }
+    function changePw() {
+      var oldPw = document.getElementById("old-pw").value.trim();
+      var newPw = document.getElementById("new-pw").value.trim();
+      var confirmPw = document.getElementById("confirm-pw").value.trim();
+      var errEl = document.getElementById("pw-error");
+      if (!USERS[oldPw] || USERS[oldPw].name !== currentUser.name) {
+        errEl.textContent = "舊密碼不正確";
+        errEl.style.display = "block";
+        return;
+      }
+      if (newPw.length < 4 || newPw.length > 6) {
+        errEl.textContent = "新密碼必須是4-6位";
+        errEl.style.display = "block";
+        return;
+      }
+      if (!/^[a-zA-Z0-9]+$/.test(newPw)) {
+        errEl.textContent = "密碼只可以係數字或英文字母";
+        errEl.style.display = "block";
+        return;
+      }
+      if (newPw !== confirmPw) {
+        errEl.textContent = "新密碼同確認密碼唔一致";
+        errEl.style.display = "block";
+        return;
+      }
+      delete USERS[oldPw];
+      USERS[newPw] = { name: currentUser.name, role: currentUser.role };
+      try { localStorage.setItem("fcn_users", JSON.stringify(USERS)); } catch (e) {}
+      closeChangePw();
+      alert("密碼已更改");
     }
     function doLogout() {
       try { localStorage.removeItem("fcn_user"); } catch (e) {}
@@ -4384,6 +4426,28 @@
       persistDraft();
     });
   </script>
+  <div class="modal-mask" id="change-pw-mask">
+    <div class="modal-box" style="width:360px">
+      <p style="font-weight:600;margin-bottom:16px">更改登入密碼</p>
+      <div style="margin-bottom:12px">
+        <label style="font-size:0.85rem;color:#666">舊密碼</label>
+        <input id="old-pw" type="password" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:0.85rem;color:#666">新密碼</label>
+        <input id="new-pw" type="password" placeholder="4-6位數字或英文字母" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px">
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="font-size:0.85rem;color:#666">確認新密碼</label>
+        <input id="confirm-pw" type="password" placeholder="4-6位數字或英文字母" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:4px">
+      </div>
+      <div id="pw-error" style="color:#c62828;font-size:0.85rem;margin-bottom:12px;display:none"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeChangePw()">取消</button>
+        <button type="button" class="btn btn-primary" onclick="changePw()">確認更改</button>
+      </div>
+    </div>
+  </div>
   <div class="modal-mask" id="confirm-mask">
     <div class="modal-box">
       <p id="confirm-text">確定刪除這隻投資產品？</p>
