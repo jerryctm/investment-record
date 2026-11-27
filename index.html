@@ -3831,7 +3831,14 @@
       if (currentUser && currentUser.role !== "admin") {
         order = order.filter(function(name) { return name === currentUser.name; });
       }
-      order.forEach(function(name) {
+      if (!window.statusInvestorIdx || window.statusInvestorIdx >= order.length) window.statusInvestorIdx = 0;
+      html += '<div class="tabs" style="margin:0 0 12px">';
+      order.forEach(function(name, idx) {
+        html += '<button type="button" class="tab' + (idx === window.statusInvestorIdx ? ' active' : '') + '" onclick="window.statusInvestorIdx=' + idx + ';renderStatus()">' + esc(name) + '</button>';
+      });
+      html += '</div>';
+      var name = order[window.statusInvestorIdx];
+      if (name) {
         var rows = groups[name];
         var total = rows.reduce(function(s, x) { return s + receivedTotal(x.item); }, 0);
         var ccy = rows[0].item.currency || "HKD";
@@ -3868,7 +3875,7 @@
         });
         html += '<tr class="total-row"><td colspan="3" class="right">合計</td><td>' + sumCoupon.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td><td></td><td>' + sumTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td><td colspan="5"></td></tr>';
         html += '</table></div>';
-      });
+      }
       var delivered = items.filter(function(x) { return x.item.status === "已接貨"; });
       if (delivered.length) {
         if (typeof deliveryIndex !== "number" || deliveryIndex >= delivered.length) deliveryIndex = 0;
