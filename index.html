@@ -917,6 +917,7 @@
         localStorage.setItem("fcn_user", JSON.stringify({ user: user, expiry: expiry }));
       } catch (e) {}
       document.getElementById("login-overlay").style.display = "none";
+      switchTab("status");
       if (user.role !== "admin") applyViewerMode();
       if (typeof renderSummary === "function") renderSummary();
       if (typeof renderStatus === "function") renderStatus();
@@ -988,6 +989,7 @@
           if (data.expiry > Date.now()) {
             currentUser = data.user;
             document.getElementById("login-overlay").style.display = "none";
+            switchTab("status");
             if (currentUser.role !== "admin") applyViewerMode();
             return;
           }
