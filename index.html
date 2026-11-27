@@ -69,6 +69,7 @@
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-outline { background: #fff; border-color: var(--input-border); color: var(--text); }
     .btn-outline:hover { background: #f8f4ee; }
+    .viewer-only { }
     .btn-danger {
       background: #fff; border: 1px solid #e57373; color: #c62828;
     }
@@ -558,7 +559,7 @@
     <div class="header-actions">
       <button class="btn btn-outline logout-btn" onclick="doLogout()">登出</button>
       <button class="btn btn-outline logout-btn" onclick="doRefresh()">刷新</button>
-      <button class="btn btn-outline logout-btn" onclick="openChangePw()">更改登入密碼</button>
+      <button class="btn btn-outline logout-btn viewer-only" onclick="openChangePw()">更改登入密碼</button>
       <button class="btn btn-outline admin-only" onclick="resetDefaults()">清空</button>
       <button class="btn btn-outline admin-only" onclick="addToSummary()">加入投資總覽表</button>
       <button class="btn btn-primary admin-only" onclick="updateDisplay()">儲存並更新顯示</button>
@@ -1035,6 +1036,9 @@
             currentUser = data.user;
             document.getElementById("login-overlay").style.display = "none";
             switchTab("status");
+            if (currentUser.role === "admin") {
+              document.querySelectorAll(".viewer-only").forEach(function(el) { el.style.display = "none"; });
+            }
             if (currentUser.role !== "admin") applyViewerMode();
             return;
           }
@@ -1049,6 +1053,9 @@
         });
       }
       checkLogin();
+      if (currentUser && currentUser.role === "admin") {
+        document.querySelectorAll(".viewer-only").forEach(function(el) { el.style.display = "none"; });
+      }
     });
 </script>
 <script>
